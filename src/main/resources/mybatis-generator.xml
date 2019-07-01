@@ -5,36 +5,52 @@
 
 <generatorConfiguration>
 
-    <context id="DB2Tables" targetRuntime="MyBatis3">
-        <jdbcConnection driverClass="COM.ibm.db2.jdbc.app.DB2Driver"
-                        connectionURL="jdbc:db2:TEST"
-                        userId="db2admin"
-                        password="db2admin">
+    <context id="sqlGenerate" targetRuntime="MyBatis3">
+
+        <!-- 数据库链接URL、用户名、密码 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/pandora_01?characterEncoding=utf8"
+                        userId="root"
+                        password="12345678">
         </jdbcConnection>
 
+        <!-- 默认false, 把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer; 为true时, 把JDBC DECIMAL和NUMERIC类型解析为java.math.BigDecimal -->
         <javaTypeResolver >
             <property name="forceBigDecimals" value="false" />
         </javaTypeResolver>
 
+        <!-- 生成Pojo包名和位置 -->
         <javaModelGenerator targetPackage="test.model" targetProject="\MBGTestProject\src">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="true" />
+            <!-- 清理前后的空格 -->
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
 
+        <!-- 生成Mapper映射XML文件位置 -->
         <sqlMapGenerator targetPackage="test.xml"  targetProject="\MBGTestProject\src">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
 
+        <!-- 生成Mapper接口文件位置 -->
         <javaClientGenerator type="XMLMAPPER" targetPackage="test.dao"  targetProject="\MBGTestProject\src">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
 
-        <table schema="DB2ADMIN" tableName="ALLTYPES" domainObjectName="Customer" >
-            <property name="useActualColumnNames" value="true"/>
-            <generatedKey column="ID" sqlStatement="DB2" identity="true" />
-            <columnOverride column="DATE_FIELD" property="startDate" />
-            <ignoreColumn column="FRED" />
-            <columnOverride column="LONG_VARCHAR_FIELD" jdbcType="VARCHAR" />
+        <!-- 要生成哪些表(更改tableName和domainObjectName就可以) -->
+        <!-- tableName:要生成的表名
+        domainObjectName:生成后的实例名
+        enableCountByExample:Count语句中加入where条件查询，默认为true开启
+        enableUpdateByExample:Update语句中加入where条件查询，默认为true开启
+        enableDeleteByExample:Delete语句中加入where条件查询，默认为true开启
+        enableSelectByExample:Select多条语句中加入where条件查询，默认为true开启
+        selectByExampleQueryId:Select单个对象语句中加入where条件查询，默认为true开启
+        -->
+        <table schema="t_test" tableName="t_test" domainObjectName="Test" enableCountByExample="true" enableUpdateByExample="true"
+               enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+            <property name="useActualColumnNames" value="false"/>
+            <!-- 数据库表主键 -->
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
     </context>
